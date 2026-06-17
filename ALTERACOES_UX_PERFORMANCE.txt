@@ -1,0 +1,34 @@
+Alterações feitas nesta versão
+
+1. Tela de perfil
+- Corrigida a visibilidade das opções de dificuldade no navegador.
+- Adicionado texto explicando a dificuldade escolhida.
+- Perfil anterior agora é carregado automaticamente quando existir.
+
+2. Missão 1
+- Diálogos ficaram mais curtos e diretos.
+- Caixa de diálogo foi movida para a parte superior, evitando cobrir personagem, NPC e cenário.
+
+3. Missão 2
+- Corrigido bug da vovó/velhinha ficar parada ou flutuando ao chegar perto da casa.
+- Enquanto o jogador ainda não pressiona E para continuar, a vovó continua seguindo o jogador e recebendo gravidade.
+- Diálogos ficaram mais curtos e a caixa não cobre mais o caminho.
+
+4. Missão 3
+- Reduzido o peso do canvas nessa missão.
+- Movimento do barco ficou mais rápido e responsivo.
+- Movimento agora usa ajuste por tempo, então o jogo fica menos lento quando o FPS cai.
+- Reduzidos efeitos, sombras, partículas e ondas desenhadas por quadro.
+- Mensagens ficaram menores e menos invasivas.
+
+5. Core geral
+- Canvas agora usa limite de pixel ratio em fases pesadas.
+- Adicionada função reutilizável para diálogos compactos.
+- HUD ficou mais seguro contra textos quebrando HTML.
+
+Atualização extra - animação e item da vovó:
+- O sprite personagem-andando-2.png agora é carregado pelo Core e alterna com personagem-andando.png durante o movimento.
+- A caminhada ganhou troca de frames, leve balanço vertical e sombra suave para parecer mais natural.
+- Missões 1, 2 e final usam a animação nova quando o personagem se move.
+- Na Missão 2, a vovó começa segurando uma sacola de compras; ao interagir, a sacola passa para o jogador.
+- A posição e o tamanho da sacola foram ajustados para acompanhar mão/direção sem cobrir a visão do cenário.

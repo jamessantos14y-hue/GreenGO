@@ -1,1 +1,101 @@
-<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>GreenGo - Perfil</title><link rel="stylesheet" href="css/style.css"></head><body><div class="screen-bg login"></div><main class="menu-shell"><section class="panel"><div class="brand"><div class="logo-badge">🌿</div><div><h1 style="font-size:clamp(38px,8vw,72px)">Perfil</h1><p class="subtitle">Antes de jogar, crie seu explorador ecológico. Isso deixa a experiência com progresso salvo no navegador.</p></div></div><div class="form"><label class="field"><span>Nome do jogador</span><input id="nome" placeholder="Digite seu nome"></label><label class="field"><span>E-mail ou apelido</span><input id="email" placeholder="exemplo@email.com"></label><label class="field"><span>Dificuldade</span><select id="dif"><option value="normal">Normal - recomendado</option><option value="facil">Fácil - mais vidas</option><option value="desafio">Desafio - menos tolerância</option></select></label><button class="btn primary" onclick="go()">Entrar no jogo</button><button class="btn secondary" onclick="Core.transition('index.html')">Voltar</button></div></section></main><div class="fade"></div><script src="js/core.js"></script><script>function go(){const n=document.getElementById('nome').value.trim();const e=document.getElementById('email').value.trim();if(!n||!e){alert('Preencha nome e e-mail/apelido.');return}Core.save('nome',n);Core.save('email',e);Core.save('dif',document.getElementById('dif').value);Core.save('score',0);Core.save('fase','jogo.html');Core.transition('jogo.html')}</script></body></html>
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>GreenGo - Perfil</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+  <div class="screen-bg login"></div>
+
+  <main class="menu-shell">
+    <section class="panel">
+      <div class="brand">
+        <div class="logo-badge">🌿</div>
+
+        <div>
+          <h1 style="font-size:clamp(38px,8vw,72px)">Perfil</h1>
+          <p class="subtitle">Crie seu explorador e escolha a dificuldade antes de jogar.</p>
+        </div>
+      </div>
+
+      <div class="form">
+        <label class="field">
+          <span>Nome do jogador</span>
+          <input id="nome" placeholder="Digite seu nome" autocomplete="name">
+        </label>
+
+        <label class="field">
+          <span>E-mail ou apelido</span>
+          <input id="email" placeholder="exemplo@email.com" autocomplete="email">
+        </label>
+
+        <label class="field">
+          <span>Dificuldade</span>
+
+          <select id="dif" onchange="updateDifficultyInfo()">
+            <option value="normal">Normal - recomendado</option>
+            <option value="facil">Fácil - mais vidas</option>
+            <option value="desafio">Desafio - mais obstáculos</option>
+          </select>
+
+          <small class="field-help" id="difInfo">Normal: desafio equilibrado para jogar sem travar o ritmo.</small>
+        </label>
+
+        <button class="btn primary" onclick="go()">Entrar no jogo</button>
+        <button class="btn secondary" onclick="Core.transition('index.html')">Voltar</button>
+      </div>
+    </section>
+  </main>
+
+  <div class="fade"></div>
+
+  <script src="js/core.js"></script>
+  <script>
+    const difficultyText = {
+      normal: 'Normal: desafio equilibrado para jogar sem travar o ritmo.',
+      facil: 'Fácil: mais vidas, menos pressão e melhor para testar o jogo.',
+      desafio: 'Desafio: mais obstáculos e menos tolerância a erros.'
+    };
+
+    function updateDifficultyInfo() {
+      const dif = document.getElementById('dif').value;
+      document.getElementById('difInfo').textContent = difficultyText[dif] || difficultyText.normal;
+    }
+
+    function fillSavedProfile() {
+      const nome = Core.get('nome', '');
+      const email = Core.get('email', '');
+      const dif = Core.get('dif', 'normal');
+
+      document.getElementById('nome').value = nome;
+      document.getElementById('email').value = email;
+      document.getElementById('dif').value = dif;
+      updateDifficultyInfo();
+    }
+
+    function go() {
+      const n = document.getElementById('nome').value.trim();
+      const e = document.getElementById('email').value.trim();
+
+      if (!n || !e) {
+        alert('Preencha nome e e-mail/apelido.');
+        return;
+      }
+
+      Core.save('nome', n);
+      Core.save('email', e);
+      Core.save('dif', document.getElementById('dif').value);
+      Core.save('score', 0);
+      Core.save('fase', 'jogo.html');
+      Core.transition('jogo.html');
+    }
+
+    fillSavedProfile();
+  </script>
+</body>
+</html>

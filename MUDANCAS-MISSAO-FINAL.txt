@@ -1,0 +1,17 @@
+Alterações feitas na Missão Final:
+
+1. js/mission4.js otimizado:
+   - Movimento mais rápido e menos pesado.
+   - Velocidade do personagem agora compensa queda de FPS.
+   - Canvas da missão final usa DPR menor para pesar menos.
+   - Menos partículas, brilhos e sombras por frame.
+   - Menos objetos simultâneos na tela.
+   - Lixeira travada agora pune menos e não deixa a fase injusta.
+   - Mantidas mecânicas de tempo, esteira, áreas contaminadas, item pesado e item contaminado.
+
+2. css/style.css otimizado:
+   - Troquei o bloco visual pesado da .mission-final por uma versão leve.
+   - Removi mix-blend-mode, vinheta pesada, blur e sombras grandes na missão final.
+
+3. missao4.html:
+   - Mantido com body class="mission-final" e scripts com defer.

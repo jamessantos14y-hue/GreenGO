@@ -9,7 +9,7 @@
   p.life=dif==='facil'?4:3;
   p.speed=dif==='desafio'?5.7:5.35;
   let score=Core.get('score',0);
-  let state='intro', msg='Fale com a garotinha para iniciar a busca pelo gato.';
+  let state='intro', msg='Fale com a garotinha para buscar o gato.';
   let flash=0, clue='';
   const girl={x:650,w:95,h:138};
   const bushes=[
@@ -33,8 +33,8 @@
     flash=45; clue='';
     if(p.life<=0){
       p.life=dif==='facil'?4:3; finds=0; bushes.forEach(b=>{b.searched=false;b.shake=0}); chooseNewTarget(); state='intro';
-      msg='Você se cansou. Fale com a garotinha para tentar de novo.';
-    }else msg=text||'Tente de novo com calma.';
+      msg='Tente de novo: fale com a garotinha.';
+    }else msg=text||'Tente outro caminho.';
   }
   function nearBush(b){return Math.abs((p.x+p.w/2)-center(b))<120 && Math.abs((p.y+p.h)-ground())<30}
   function interact(){
@@ -43,34 +43,34 @@
     }
     if(state==='intro' && Math.abs(p.x-girl.x)<185){
       state='hunt';
-      msg='O gato está escondido. Procure nos arbustos e use o som do miado como pista. Ele não aparece até você encontrar.';
+      msg='Procure o gato nos arbustos. O miado fica mais forte quando você chega perto.';
       return;
     }
     if(state!=='hunt') return;
     const b=bushes.find(nearBush);
-    if(!b){msg='Chegue encostado em um arbusto e pressione E para procurar.';return;}
+    if(!b){msg='Encoste em um arbusto e pressione E.';return;}
     b.shake=22;
     if(b.id===target){
       finds++; score+=35;
       for(let i=0;i<28;i++) particles.push({x:center(b),y:ground()-b.h,xv:Core.rnd(-2.4,2.4),yv:Core.rnd(-7,-1),life:48,icon:i%4===0?'🐾':null});
       if(finds>=needed){
         state='done'; score+=150; clue='';
-        msg='Você encontrou o gato pela última vez! Volte para a garotinha e pressione E.';
+        msg='Gato resgatado! Volte para a garotinha e pressione E.';
       }else{
-        msg=`Você viu o gato por um instante, mas ele fugiu para outro arbusto. Encontrado ${finds}/${needed}.`;
+        msg=`Achou! Ele fugiu. Progresso ${finds}/${needed}.`;
         chooseNewTarget();
       }
     }else{
       b.searched=true; score=Math.max(0,score-5);
-      msg='Nada aqui... continue procurando. Tente ouvir se o miado fica mais forte.';
+      msg='Não está aqui. Tente outro arbusto.';
     }
   }
   function updateClue(){
     if(state!=='hunt'){clue='';return;}
     const d=Math.abs((p.x+p.w/2)-center(bushes[target]));
-    if(d<170) clue='🐱 MIAU! O som está muito perto.';
-    else if(d<420) clue='Você ouve um miado por perto...';
-    else clue='O som do gato está distante.';
+    if(d<170) clue='🐱 Muito perto.';
+    else if(d<420) clue='Miado por perto.';
+    else clue='Miado distante.';
   }
   function update(){
     Core.hud('Missão 1: Gato Escondido',`${msg}${clue?` • ${clue}`:''}`,p.life,Math.floor(score));
@@ -80,7 +80,7 @@
     if(inp.jump()&&p.ground){p.vy=p.jump;p.ground=false}
     if(inp.action()){interact();inp.clearAction()}
     Core.physics(p,ground(),worldW);
-    if(p.y>h()+120) resetRound('Você caiu. Volte à trilha e continue procurando.');
+    if(p.y>h()+120) resetRound('Você caiu. Continue procurando.');
     bushes.forEach(b=>{if(b.shake>0)b.shake--});
     particles=particles.filter(a=>(a.x+=a.xv,a.y+=a.yv,a.yv+=.18,--a.life>0));
     updateClue();
@@ -107,17 +107,21 @@
     });
 
     // O gato fica invisível durante a busca. Só aparece rapidamente nas partículas quando encontrado.
-    Core.playerDraw(ctx,p,Math.abs(p.vx)>0?I.walk:I.idle,I.idle);
+    Core.playerDraw(ctx,p,Math.abs(p.vx)>0?[I.walk,I.walk2]:I.idle,I.idle);
     particles.forEach(a=>{ctx.globalAlpha=a.life/48;if(a.icon)Core.text(ctx,a.icon,a.x,a.y,22,'#fff','center');else{ctx.fillStyle='#d9f99d';ctx.beginPath();ctx.arc(a.x,a.y,4,0,Math.PI*2);ctx.fill()}ctx.globalAlpha=1});
     ctx.restore();
     drawDialog();
     if(flash){ctx.fillStyle=`rgba(239,68,68,${flash/130})`;ctx.fillRect(0,0,w(),h())}
   }
   function drawDialog(){
-    const bx=24,by=h()-196,bw=Math.min(800,w()-48),bh=108;
-    Core.rect(ctx,bx,by,bw,bh,22,'rgba(3,8,6,.80)','rgba(190,242,100,.35)');
-    Core.wrap(ctx,msg,bx+22,by+28,bw-44,28,21,'#f7fee7');
-    Core.text(ctx,state==='done'?'E para próxima missão':'E/Enter para interagir',bx+22,by+86,16,'#bbf7d0');
+    Core.drawDialog(ctx,msg,w(),h(),{
+      x:18,
+      y:88,
+      maxWidth:Math.min(560,w()-36),
+      height:68,
+      size:16,
+      prompt:state==='done'?'E para próxima missão':'E/Enter para interagir'
+    });
   }
   function loop(){update();draw();requestAnimationFrame(loop)}
   p.y=ground()-p.h;loop();
